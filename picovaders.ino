@@ -1,8 +1,18 @@
-#include "Arduboy.h"
+#include "Arduboy2.h"
 
 #define MAXINT16 65535
 
-static Arduboy arduboy;
+static Arduboy2 arduboy;
+
+// Wrap the Arduino tone() function so that the pin doesn't have to be
+// specified each time. Also, don't play if audio is set to off.
+void playTone(unsigned int frequency, unsigned long duration)
+{
+  if (arduboy.audio.enabled() == true)
+  {
+    tone(PIN_SPEAKER_1, frequency, duration);
+  }
+}
 
 #define DRAW_PIXEL(x,y,c)    arduboy.drawPixel((x), (y), (c));
 #define GET_PIXEL(x,y)      arduboy.getPixel((x), (y))
@@ -17,7 +27,7 @@ static Arduboy arduboy;
 #define KEY_PRESSED(k)    arduboy.pressed((k))
 #define KEY_NOT_PRESSED(k)  arduboy.notPressed((k))
 
-#define TONE(f,d)     arduboy.tunes.tone((f), (d))
+#define TONE(f,d)     playTone((f), (d))
 #define SOUND_ON      arduboy.audio.on()
 #define SOUND_OFF     arduboy.audio.off()
 
